@@ -1,4 +1,4 @@
-# 🏦 Banking System Backend API
+# Banking System Backend API
 
 A comprehensive, production-grade RESTful API for managing modern banking operations. Built with Go, featuring modern architecture patterns including microservices-ready design, comprehensive error handling, and full support for complex banking scenarios like joint accounts.
 
