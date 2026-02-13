@@ -92,14 +92,14 @@ Detailed repayment functionality:
 
 ##  Tech Stack
 
-| Component         | Technology | Version |
-| ----------------- | ---------- | ------- |
-| **Language**      | Go         | 1.23.0  |
-| **Web Framework** | Gin Gonic  | 1.11.0  |
-| **ORM**           | GORM       | 1.31.1  |
-| **Database**      | PostgreSQL | Latest  |
-| **Driver**        | pgx        | 5.6.0   |
-| **Configuration** | godotenv   | 1.5.1   |
+| Component         | Technology |
+| ----------------- | ---------- |
+| **Language**      | Go         |
+| **Web Framework** | Gin Gonic  |
+| **ORM**           | GORM       |
+| **Database**      | PostgreSQL |
+| **Driver**        | pgx        |
+| **Configuration** | godotenv   | 
 
 
 ---
