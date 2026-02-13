@@ -4,7 +4,7 @@ A comprehensive, production-grade RESTful API for managing modern banking operat
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Overview](#overview)
 - [Features](#features)
@@ -79,7 +79,7 @@ Complete loan lifecycle management:
 - **Interest Calculation**: Automatic interest rate application
 - **Loan Status Tracking**: Monitor loan progress from creation to closure
 
-### 📝 **Repayment Tracking**
+### **Repayment Tracking**
 
 Detailed repayment functionality:
 
@@ -150,7 +150,7 @@ banking_system/
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
