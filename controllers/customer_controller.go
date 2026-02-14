@@ -108,36 +108,3 @@ func (c *CustomerController) DeleteCustomer(ctx *gin.Context) {
 
 	ctx.Status(http.StatusNoContent)
 }
-
-func (c *CustomerController) GetCustomerAccounts(ctx *gin.Context) {
-	id, err := strconv.Atoi(ctx.Param("id"))
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid customer id"})
-		return
-	}
-
-	accounts, err := c.service.GetAccounts(uint(id))
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	ctx.JSON(http.StatusOK, accounts)
-}
-
-func (c *CustomerController) GetCustomerLoans(ctx *gin.Context) {
-	id, err := strconv.Atoi(ctx.Param("id"))
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid customer id"})
-		return
-	}
-
-	loans, err := c.service.GetLoans(uint(id))
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	ctx.JSON(http.StatusOK, loans)
-}
-

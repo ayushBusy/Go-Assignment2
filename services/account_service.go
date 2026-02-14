@@ -145,6 +145,18 @@ func (s *AccountService) RemoveCustomer(accountID, customerID uint) error {
 	return nil
 }
 
+func (s *AccountService) GetCustomerAccounts(customerID uint) ([]models.Account, error) {
+	var accounts []models.Account
+	err := s.db.Table("accounts").
+		Joins("JOIN account_customers ON account_customers.account_id = accounts.id").
+		Where("account_customers.customer_id = ?", customerID).
+		Find(&accounts).Error
+	if err != nil {
+		return nil, err
+	}
+	return accounts, nil
+}
+
 func (s *AccountService) GetTransactions(accountID uint) ([]models.Transaction, error) {
 	var txs []models.Transaction
 	if err := s.db.Where("account_id = ?", accountID).Order("created_at asc").Find(&txs).Error; err != nil {

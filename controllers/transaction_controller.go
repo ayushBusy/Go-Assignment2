@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"banking_system/models"
 	"banking_system/services"
 
 	"github.com/gin-gonic/gin"
@@ -18,15 +17,23 @@ func NewTransactionController(service *services.TransactionService) *Transaction
 	return &TransactionController{service: service}
 }
 
+type CreateTransactionRequest struct {
+	AccountID   uint   `json:"account_id" binding:"required"`
+	Type        string `json:"transaction_type" binding:"required"`
+	Amount      float64 `json:"amount" binding:"required"`
+	Description string `json:"description"`
+}
+
 func (c *TransactionController) CreateTransaction(ctx *gin.Context) {
-	var txn models.Transaction
-	if err := ctx.ShouldBindJSON(&txn); err != nil {
+	var req CreateTransactionRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	if err := c.service.Create(&txn); err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	txn, err := c.service.ProcessTransaction(req.AccountID, req.Type, req.Amount, req.Description)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -58,44 +65,19 @@ func (c *TransactionController) GetAllTransactions(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, txs)
 }
 
-func (c *TransactionController) UpdateTransaction(ctx *gin.Context) {
-	id, err := strconv.Atoi(ctx.Param("id"))
+func (c *TransactionController) GetAccountTransactions(ctx *gin.Context) {
+	accountID, err := strconv.Atoi(ctx.Param("accountId"))
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid transaction id"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid account id"})
 		return
 	}
 
-	txn, err := c.service.GetByID(uint(id))
+	txs, err := c.service.GetAccountTransactions(uint(accountID))
 	if err != nil {
-		ctx.JSON(http.StatusNotFound, gin.H{"error": "transaction not found"})
-		return
-	}
-
-	if err := ctx.ShouldBindJSON(txn); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	if err := c.service.Update(txn); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	ctx.JSON(http.StatusOK, txn)
-}
-
-func (c *TransactionController) DeleteTransaction(ctx *gin.Context) {
-	id, err := strconv.Atoi(ctx.Param("id"))
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid transaction id"})
-		return
-	}
-
-	if err := c.service.Delete(uint(id)); err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	ctx.Status(http.StatusNoContent)
+	ctx.JSON(http.StatusOK, txs)
 }
 

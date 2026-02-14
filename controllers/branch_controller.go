@@ -98,3 +98,18 @@ func (c *BranchController) DeleteBranch(ctx *gin.Context) {
 	ctx.Status(http.StatusNoContent)
 }
 
+func (c *BranchController) GetBranchesByBankID(ctx *gin.Context) {
+	bankID, err := strconv.Atoi(ctx.Param("bankId"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid bank id"})
+		return
+	}
+
+	branches, err := c.service.GetByBankID(uint(bankID))
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, branches)
+}
