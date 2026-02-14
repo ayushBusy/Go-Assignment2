@@ -59,45 +59,20 @@ func (c *LoanController) GetAllLoans(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, loans)
 }
 
-func (c *LoanController) UpdateLoan(ctx *gin.Context) {
-	id, err := strconv.Atoi(ctx.Param("id"))
+func (c *LoanController) GetCustomerLoans(ctx *gin.Context) {
+	customerID, err := strconv.Atoi(ctx.Param("customerId"))
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid loan id"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid customer id"})
 		return
 	}
 
-	loan, err := c.service.GetByID(uint(id))
+	loans, err := c.service.GetCustomerLoans(uint(customerID))
 	if err != nil {
-		ctx.JSON(http.StatusNotFound, gin.H{"error": "loan not found"})
-		return
-	}
-
-	if err := ctx.ShouldBindJSON(loan); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	if err := c.service.Update(loan); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	ctx.JSON(http.StatusOK, loan)
-}
-
-func (c *LoanController) DeleteLoan(ctx *gin.Context) {
-	id, err := strconv.Atoi(ctx.Param("id"))
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid loan id"})
-		return
-	}
-
-	if err := c.service.Delete(uint(id)); err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	ctx.Status(http.StatusNoContent)
+	ctx.JSON(http.StatusOK, loans)
 }
 
 func (c *LoanController) GetLoanDetails(ctx *gin.Context) {

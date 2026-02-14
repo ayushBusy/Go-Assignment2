@@ -43,6 +43,8 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 		branches.GET("/:id", branchController.GetBranchByID)
 		branches.PUT("/:id", branchController.UpdateBranch)
 		branches.DELETE("/:id", branchController.DeleteBranch)
+
+		branches.GET("/bank/:bankId", branchController.GetBranchesByBankID)
 	}
 
 	customers := router.Group("/customers")
@@ -52,9 +54,6 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 		customers.GET("/:id", customerController.GetCustomerByID)
 		customers.PUT("/:id", customerController.UpdateCustomer)
 		customers.DELETE("/:id", customerController.DeleteCustomer)
-
-		customers.GET("/:id/accounts", customerController.GetCustomerAccounts)
-		customers.GET("/:id/loans", customerController.GetCustomerLoans)
 	}
 
 	accounts := router.Group("/accounts")
@@ -67,11 +66,6 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 
 		accounts.POST("/:id/customers/:customerId", accountController.AddCustomerToAccount)
 		accounts.DELETE("/:id/customers/:customerId", accountController.RemoveCustomerFromAccount)
-
-		accounts.GET("/:id/transactions", accountController.GetAccountTransactions)
-
-		accounts.POST("/:id/deposit", accountController.Deposit)
-		accounts.POST("/:id/withdraw", accountController.Withdraw)
 	}
 
 	loans := router.Group("/loans")
@@ -79,8 +73,6 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 		loans.POST("", loanController.CreateLoan)
 		loans.GET("", loanController.GetAllLoans)
 		loans.GET("/:id", loanController.GetLoanByID)
-		loans.PUT("/:id", loanController.UpdateLoan)
-		loans.DELETE("/:id", loanController.DeleteLoan)
 
 		loans.GET("/:id/details", loanController.GetLoanDetails)
 		loans.POST("/:id/repay", loanController.RepayLoan)
@@ -91,8 +83,6 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 		repayments.POST("", repaymentController.CreateRepayment)
 		repayments.GET("", repaymentController.GetAllRepayments)
 		repayments.GET("/:id", repaymentController.GetRepaymentByID)
-		repayments.PUT("/:id", repaymentController.UpdateRepayment)
-		repayments.DELETE("/:id", repaymentController.DeleteRepayment)
 	}
 
 	transactions := router.Group("/transactions")
@@ -100,8 +90,6 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 		transactions.POST("", transactionController.CreateTransaction)
 		transactions.GET("", transactionController.GetAllTransactions)
 		transactions.GET("/:id", transactionController.GetTransactionByID)
-		transactions.PUT("/:id", transactionController.UpdateTransaction)
-		transactions.DELETE("/:id", transactionController.DeleteTransaction)
 	}
 	return router
 }

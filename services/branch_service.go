@@ -42,3 +42,12 @@ func (s *BranchService) Delete(id uint) error {
 	return s.db.Delete(&models.Branch{}, id).Error
 }
 
+func (s *BranchService) GetByBankID(bankID uint) ([]models.Branch, error) {
+	var branches []models.Branch
+	if err := s.db.Where("bank_id = ?", bankID).Find(&branches).Error; err != nil {
+		return nil, err
+	}
+	return branches, nil
+}
+
+

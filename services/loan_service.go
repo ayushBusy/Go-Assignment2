@@ -46,6 +46,14 @@ func (s *LoanService) GetAll() ([]models.Loan, error) {
 	return loans, nil
 }
 
+func (s *LoanService) GetCustomerLoans(customerID uint) ([]models.Loan, error) {
+	var loans []models.Loan
+	if err := s.db.Where("customer_id = ?", customerID).Find(&loans).Error; err != nil {
+		return nil, err
+	}
+	return loans, nil
+}
+
 func (s *LoanService) Update(loan *models.Loan) error {
 	return s.db.Save(loan).Error
 }

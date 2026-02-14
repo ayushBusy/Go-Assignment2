@@ -142,68 +142,19 @@ func (c *AccountController) RemoveCustomerFromAccount(ctx *gin.Context) {
 	ctx.Status(http.StatusNoContent)
 }
 
-func (c *AccountController) GetAccountTransactions(ctx *gin.Context) {
-	accountID, err := strconv.Atoi(ctx.Param("id"))
+func (c *AccountController) GetCustomerAccounts(ctx *gin.Context) {
+	customerID, err := strconv.Atoi(ctx.Param("customerId"))
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid account id"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid customer id"})
 		return
 	}
 
-	txs, err := c.service.GetTransactions(uint(accountID))
+	accounts, err := c.service.GetCustomerAccounts(uint(customerID))
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	ctx.JSON(http.StatusOK, txs)
-}
-
-type DepositRequest struct {
-	Amount      float64 `json:"amount"`
-	Description string  `json:"description"`
-}
-
-func (c *AccountController) Deposit(ctx *gin.Context) {
-	accountID, err := strconv.Atoi(ctx.Param("id"))
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid account id"})
-		return
-	}
-
-	var req DepositRequest
-	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	txRecord, err := c.service.Deposit(uint(accountID), req.Amount, req.Description)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	ctx.JSON(http.StatusOK, txRecord)
-}
-
-func (c *AccountController) Withdraw(ctx *gin.Context) {
-	accountID, err := strconv.Atoi(ctx.Param("id"))
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid account id"})
-		return
-	}
-
-	var req DepositRequest
-	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	txRecord, err := c.service.Withdraw(uint(accountID), req.Amount, req.Description)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	ctx.JSON(http.StatusOK, txRecord)
+	ctx.JSON(http.StatusOK, accounts)
 }
 
